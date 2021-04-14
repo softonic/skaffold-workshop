@@ -1,0 +1,41 @@
+apiVersion: skaffold/v2beta12
+kind: Config
+metadata:
+  name: hello-world
+profiles:
+- name: dev
+  activation:
+  - command: dev
+  - kubeContext: kind-sft-dev
+  build:
+    local:
+      push: false
+      useBuildkit: true
+    artifacts:
+    - image: softonic/hello-world
+      context: .
+      docker:
+        dockerfile: ./Dockerfile
+      sync:
+        manual:
+        - src: 'src/**'
+          dest: '/usr/share/caddy/'
+          strip: 'src/'
+  deploy:
+    kubeContext: kind-sft-dev
+    statusCheckDeadlineSeconds: 600
+    helm:
+      flags:
+        install: ["--timeout", "1m"]
+        upgrade: ["--timeout", "1m"]
+      releases:
+        - name: hello-world
+          chartPath: ./charts/hello-world
+          valuesFiles:
+            - ./charts/hello-world/values.yaml
+          artifactOverrides:
+            image.fullnameOverride: softonic/hello-world
+          recreatePods: false
+          createNamespace: true
+          wait: false
+          namespace: hello-world
