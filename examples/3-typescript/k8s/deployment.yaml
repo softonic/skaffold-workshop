@@ -4,8 +4,10 @@ metadata:
   name: node
 spec:
   ports:
-  - port: 3000
-  type: LoadBalancer
+  - port: 30000
+    nodePort: 30000
+    targetPort: 3000
+  type: NodePort
   selector:
     app: node
 ---

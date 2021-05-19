@@ -7,7 +7,7 @@ import (
 
 func main() {
 	for {
-		fmt.Println("Hello skaffold! Manual")
+		fmt.Println("Hello skaffold!")
 
 		time.Sleep(time.Second * 1)
 	}
